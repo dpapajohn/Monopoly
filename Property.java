@@ -9,7 +9,7 @@ public class Property extends Location
 	private int myCost;
 	private int myRent;
 	private ArrayList<Property> mySeriesMates;
-	
+
 	Property()
 	{
 		myColor = Color.BLACK;
@@ -18,7 +18,7 @@ public class Property extends Location
 		myRent = 0;
 		mySeriesMates = new ArrayList<Property>();
 	}
-	
+
 	public void addSeriesMate(Property p)
 	{
 		mySeriesMates.add(p);
@@ -32,7 +32,7 @@ public class Property extends Location
 		}
 		return true;
 	}
-	
+
 	public int getCost()
 	{
 		return myCost;
@@ -65,35 +65,28 @@ public class Property extends Location
 	{
 		myColor = color;
 	}
-	
+
 	public String landedOn(Player p)
 	{
-		
-		
+
+
 		if(myOwner == null)
 		{
-			//someone doesnt own it. p has option to buy it.
-			int response = 0;
-			Scanner kb = new Scanner(System.in);
-			while(response < 1 || response > 2)
-			{
-				System.out.println("Purchase " + myName + " for $" + myCost + "? Options:");
-				System.out.println("\t1.) Yes, buy for $" + myCost + ".");
-				System.out.println("\t2.) No.");
-				response = kb.nextInt();
-			}
-			kb.close();
-			if(response == 1)
-			{
-				p.subtractCash(myCost);
+			PurchasePrompt pp = new PurchasePrompt(this, p);
+
+			while(pp.getResponse() == ""){}
+
+	    	if(pp.getResponse() == "Yes")
+	    	{
+	    		p.subtractCash(myCost);
 				p.addProperty(this);
 				myOwner = p;
 				return p.getName() + " purchased " + myName + ".";
-			}
-			else
-			{
-				return p.getName() + " did not purchase " + myName + ".";
-			}
+	    	}
+	    	else
+	    	{
+	    		return p.getName() + " did not purchase " + myName + ".";
+	    	}
 		}
 		else
 		{
@@ -103,6 +96,6 @@ public class Property extends Location
 			return p.getName() + " paid " + myOwner.getName() + " $" + myRent
 					+ " for rent on " + myName + ".";
 		}
-		
+
 	}
 }
